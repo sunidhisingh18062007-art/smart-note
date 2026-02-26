@@ -440,8 +440,6 @@ cd public && http-server -p 3000
 
 ---
 
-**Built for BCA Final Year Project & Portfolio**
-
-Created with ❤️ for modern web development standards
 
 Latest update: February 2026
+
