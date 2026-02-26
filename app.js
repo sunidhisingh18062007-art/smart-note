@@ -1,5 +1,5 @@
 // Smart Study Notes Manager - Main App Controller
-const API = localStorage.getItem('apiUrl') || 'http://localhost:5000/api';
+const API = '/api';
 
 // App state
 let currentView = 'dashboard';
@@ -163,3 +163,4 @@ window.APP = {
   toggleTheme,
   currentView: () => currentView
 };
+
