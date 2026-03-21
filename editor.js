@@ -29,12 +29,12 @@ window.EDITOR = {
   },
 
   open(id) {
-    const note = window.NOTES.current.find(n => n._id === id);
+    const note = window.NOTES.current.find(n => n.id === id);
     if (!note) {
       alert('Note not found');
       return;
     }
-    this.currentId = note._id;
+    this.currentId = note.id;
     document.getElementById('noteTitle').value = note.title;
     document.getElementById('noteCategory').value = note.category;
     if (quill) quill.root.innerHTML = note.content || '';
@@ -58,9 +58,9 @@ window.EDITOR = {
 
     try {
       if (this.currentId) {
-        window.NOTES.update(this.currentId, title, category, content);
+        await window.NOTES.update(this.currentId, title, category, content);
       } else {
-        window.NOTES.create(title, category, content);
+        await window.NOTES.create(title, category, content);
       }
       this.showView('dashboardView');
     } catch (err) {
