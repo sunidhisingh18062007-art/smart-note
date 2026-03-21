@@ -4,55 +4,51 @@ window.NOTES = {
   filtered: [],
   storageKey: 'notes',
 
-  refresh() {
-    try {
-      const data = localStorage.getItem(this.storageKey);
-      this.current = data ? JSON.parse(data) : [];
-      this.filtered = this.current;
-      this.updateUI();
-    } catch (err) {
-      console.error('Failed to load notes from storage', err);
-      this.current = [];
-      this.filtered = [];
-      this.updateUI();
-    }
-  },
+ async refresh() {
+  try {
+    const res = await fetch('/api/notes');
+    this.current = await res.json();
+    this.filtered = this.current;
+    this.updateUI();
+  } catch (err) {
+    console.error('Failed to load notes from backend', err);
+  }
+},
 
-  persist() {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.current));
-  },
+  async create(title, category, content) {
+  const res = await fetch('/api/notes', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title, category, content })
+  });
 
-  create(title, category, content) {
-    const note = {
-      _id: Date.now().toString(),
-      title,
-      category,
-      content,
-      createdAt: new Date().toISOString()
-    };
-    this.current.unshift(note);
-    this.persist();
-    this.refresh();
-    return note;
-  },
+  const note = await res.json();
+  this.current.unshift(note);
+  this.refresh();
+  return note;
+},
 
-  update(id, title, category, content) {
-    const idx = this.current.findIndex(n => n._id === id);
-    if (idx === -1) throw new Error('Note not found');
-    this.current[idx].title = title;
-    this.current[idx].category = category;
-    this.current[idx].content = content;
-    this.persist();
-    this.refresh();
-  },
+  async update(id, title, category, content) {
+  await fetch(`/api/notes/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title, category, content })
+  });
 
-  delete(id) {
-    const idx = this.current.findIndex(n => n._id === id);
-    if (idx === -1) return;
-    this.current.splice(idx, 1);
-    this.persist();
-    this.refresh();
-  },
+  this.refresh();
+},
+
+  async delete(id) {
+  await fetch(`/api/notes/${id}`, {
+    method: 'DELETE'
+  });
+
+  this.refresh();
+},
 
   search(q, cat) {
     this.filtered = this.current.filter(n => {
