@@ -86,8 +86,8 @@ window.NOTES = {
       <p class="cat">${note.category}</p>
       <p class="preview">${note.content ? note.content.substring(0, 100) + '...' : 'No content'}</p>
       <div class="actions">
-        <button class="btn btn-sm" onclick="window.EDITOR.open('${note._id}')">Edit</button>
-        <button class="btn btn-sm outline" onclick="window.NOTES.delete('${note._id}')">Delete</button>
+        <button class="btn btn-sm" onclick="window.EDITOR.open('${note.id}')">Edit</button>
+        <button class="btn btn-sm outline" onclick="window.NOTES.delete('${note.id}')">Delete</button>
       </div>
     `;
     container.appendChild(card);
