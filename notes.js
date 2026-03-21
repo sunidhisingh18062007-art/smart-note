@@ -97,6 +97,7 @@ window.NOTES = {
   const recentCount = document.getElementById('recentNotesCount');
   if (totalNotes) totalNotes.innerText = this.current.length;
   if (recentCount) recentCount.innerText = Math.min(this.current.length, 5);
+  }
 };
 
 // initialization listeners
