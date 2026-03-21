@@ -60,36 +60,43 @@ window.NOTES = {
   },
 
   updateUI() {
-    const container = document.getElementById('recentNotes') || document.getElementById('notesGrid');
-    if (!container) return;
+  let container;
 
-    container.innerHTML = '';
-    if (this.filtered.length === 0) {
-      container.innerHTML = '<p>No notes found.</p>';
-      return;
-    }
-
-    this.filtered.forEach(note => {
-      const card = document.createElement('div');
-      card.className = 'card note-card';
-      card.innerHTML = `
-        <h4>${note.title}</h4>
-        <p class="cat">${note.category}</p>
-        <p class="preview">${note.content ? note.content.substring(0, 100) + '...' : 'No content'}</p>
-        <div class="actions">
-          <button class="btn btn-sm" onclick="window.EDITOR.open('${note._id}')">Edit</button>
-          <button class="btn btn-sm outline" onclick="window.NOTES.delete('${note._id}')">Delete</button>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-
-    // Update dashboard stats
-    const totalNotes = document.getElementById('totalNotes');
-    const recentCount = document.getElementById('recentNotesCount');
-    if (totalNotes) totalNotes.innerText = this.current.length;
-    if (recentCount) recentCount.innerText = Math.min(this.current.length, 5);
+  // 🔥 FIX: decide container based on current view
+  if (window.APP && window.APP.currentView() === 'notes') {
+    container = document.getElementById('notesGrid');
+  } else {
+    container = document.getElementById('recentNotes');
   }
+
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  if (this.filtered.length === 0) {
+    container.innerHTML = '<p>No notes found.</p>';
+    return;
+  }
+
+  this.filtered.forEach(note => {
+    const card = document.createElement('div');
+    card.className = 'card note-card';
+    card.innerHTML = `
+      <h4>${note.title}</h4>
+      <p class="cat">${note.category}</p>
+      <p class="preview">${note.content ? note.content.substring(0, 100) + '...' : 'No content'}</p>
+      <div class="actions">
+        <button class="btn btn-sm" onclick="window.EDITOR.open('${note._id}')">Edit</button>
+        <button class="btn btn-sm outline" onclick="window.NOTES.delete('${note._id}')">Delete</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  const totalNotes = document.getElementById('totalNotes');
+  const recentCount = document.getElementById('recentNotesCount');
+  if (totalNotes) totalNotes.innerText = this.current.length;
+  if (recentCount) recentCount.innerText = Math.min(this.current.length, 5);
 };
 
 // initialization listeners
